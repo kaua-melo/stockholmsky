@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/stockholmsky/static/css/main.5e3647ae.chunk.css",
+    "main.js": "/stockholmsky/static/js/main.2cdffd38.chunk.js",
+    "runtime-main.js": "/stockholmsky/static/js/runtime-main.b58df0e3.js",
+    "static/js/2.048fbaac.chunk.js": "/stockholmsky/static/js/2.048fbaac.chunk.js",
+    "static/js/3.ddbb5d7b.chunk.js": "/stockholmsky/static/js/3.ddbb5d7b.chunk.js",
+    "index.html": "/stockholmsky/index.html",
+    "static/js/2.048fbaac.chunk.js.LICENSE.txt": "/stockholmsky/static/js/2.048fbaac.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/stockholmsky/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b58df0e3.js",
+    "static/js/2.048fbaac.chunk.js",
+    "static/css/main.5e3647ae.chunk.css",
+    "static/js/main.2cdffd38.chunk.js"
+  ]
+}
