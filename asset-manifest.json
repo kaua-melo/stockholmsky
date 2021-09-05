@@ -1,18 +1,35 @@
 {
   "files": {
-    "main.css": "/stockholmsky/static/css/main.5e3647ae.chunk.css",
-    "main.js": "/stockholmsky/static/js/main.2cdffd38.chunk.js",
-    "runtime-main.js": "/stockholmsky/static/js/runtime-main.b58df0e3.js",
-    "static/js/2.048fbaac.chunk.js": "/stockholmsky/static/js/2.048fbaac.chunk.js",
-    "static/js/3.ddbb5d7b.chunk.js": "/stockholmsky/static/js/3.ddbb5d7b.chunk.js",
+    "main.css": "/stockholmsky/static/css/main.ec9b7055.chunk.css",
+    "main.js": "/stockholmsky/static/js/main.57857bd4.chunk.js",
+    "runtime-main.js": "/stockholmsky/static/js/runtime-main.d5fe7bf3.js",
+    "static/js/2.dae8adc8.chunk.js": "/stockholmsky/static/js/2.dae8adc8.chunk.js",
+    "static/js/3.594886b4.chunk.js": "/stockholmsky/static/js/3.594886b4.chunk.js",
     "index.html": "/stockholmsky/index.html",
-    "static/js/2.048fbaac.chunk.js.LICENSE.txt": "/stockholmsky/static/js/2.048fbaac.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/stockholmsky/static/media/logo.6ce24c58.svg"
+    "static/js/2.dae8adc8.chunk.js.LICENSE.txt": "/stockholmsky/static/js/2.dae8adc8.chunk.js.LICENSE.txt",
+    "static/media/1.1cb4de0d.png": "/stockholmsky/static/media/1.1cb4de0d.png",
+    "static/media/1.8a8921ee.jpg": "/stockholmsky/static/media/1.8a8921ee.jpg",
+    "static/media/10.438fffb0.jpg": "/stockholmsky/static/media/10.438fffb0.jpg",
+    "static/media/2.f86c98f8.jpg": "/stockholmsky/static/media/2.f86c98f8.jpg",
+    "static/media/3.79e08250.jpg": "/stockholmsky/static/media/3.79e08250.jpg",
+    "static/media/4.4fcc74ee.jpg": "/stockholmsky/static/media/4.4fcc74ee.jpg",
+    "static/media/5.3a7ca378.jpg": "/stockholmsky/static/media/5.3a7ca378.jpg",
+    "static/media/6.6f3ef535.jpg": "/stockholmsky/static/media/6.6f3ef535.jpg",
+    "static/media/7.51871c67.jpg": "/stockholmsky/static/media/7.51871c67.jpg",
+    "static/media/8.52a82814.jpg": "/stockholmsky/static/media/8.52a82814.jpg",
+    "static/media/9.6fd0153e.jpg": "/stockholmsky/static/media/9.6fd0153e.jpg",
+    "static/media/index.css": "/stockholmsky/static/media/Roboto-Regular.a8d6ac03.ttf",
+    "static/media/close_sign_inactivatted.27b69a47.svg": "/stockholmsky/static/media/close_sign_inactivatted.27b69a47.svg",
+    "static/media/close_sign_white.965eacb4.svg": "/stockholmsky/static/media/close_sign_white.965eacb4.svg",
+    "static/media/cloudP_menu_tooltip.d21b14fc.svg": "/stockholmsky/static/media/cloudP_menu_tooltip.d21b14fc.svg",
+    "static/media/menuIcon1.eb91d2ac.svg": "/stockholmsky/static/media/menuIcon1.eb91d2ac.svg",
+    "static/media/music_icon_selected.a1a2bb6e.svg": "/stockholmsky/static/media/music_icon_selected.a1a2bb6e.svg",
+    "static/media/music_icon_unselected.db60498a.svg": "/stockholmsky/static/media/music_icon_unselected.db60498a.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.b58df0e3.js",
-    "static/js/2.048fbaac.chunk.js",
-    "static/css/main.5e3647ae.chunk.css",
-    "static/js/main.2cdffd38.chunk.js"
+    "static/js/runtime-main.d5fe7bf3.js",
+    "static/js/2.dae8adc8.chunk.js",
+    "static/css/main.ec9b7055.chunk.css",
+    "static/js/main.57857bd4.chunk.js"
   ]
 }
