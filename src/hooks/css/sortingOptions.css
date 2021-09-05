@@ -1,0 +1,81 @@
+.grid_item {
+  border-right: 1px solid rgb(207, 207, 207);
+
+  /* Centralizing the div inside */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.sorting_container {
+  /* border: 1px solid red; */
+
+  /* max-width: 85%; */
+
+  /* margin-left: auto;
+  margin-right: auto; */
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto;
+
+  /* background-color: lightpink; */
+}
+
+.sort_by_wrapper {
+  /* border: 1px solid blue; */
+  /* padding-right: 15px; */
+}
+.sort_by_wrapper span {
+  color: rgb(108, 108, 108);
+  /* color: rgb(135, 135, 135); */
+
+  white-space: nowrap;
+
+  /* font-family: "Poppins_regular"; */
+  font-family: "Poppins_medium";
+
+  font-size: 15px;
+}
+
+/* Smaller screens */
+.sort_by_wrapper2 {
+  /* border: 1px solid blue; */
+  /* padding-right: 15px; */
+  float: left;
+}
+.sort_by_wrapper2 span {
+  color: rgb(108, 108, 108);
+  /* white-space: nowrap; */
+}
+/* --------------------------- */
+
+.cloud_percentage_wrapper {
+  /* border: 1px solid blue; */
+  /* padding-right: 10px; */
+
+  padding-left: 20px;
+}
+
+.cloud_percentage_wrapper2 {
+  /* border: 1px solid blue; */
+  /* padding-right: 10px; */
+
+  /* padding-left: 15px; */
+}
+
+.date_wrapper {
+  /* border: 1px solid blue; */
+
+  /* padding-right: 10px; */
+  padding-left: 15px;
+}
+
+.month_wrapper {
+  /* border: 1px solid blue; */
+  padding-left: 15px;
+}
+
+.hoverable_menu_option {
+  white-space: nowrap;
+}

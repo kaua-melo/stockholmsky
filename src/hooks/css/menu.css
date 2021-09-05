@@ -1,0 +1,297 @@
+#menu_container {
+  width: 450px;
+  height: 100vh;
+
+  /* background-color: rgba(131, 209, 242, 0.6); */
+  background-color: rgba(255, 255, 255, 1);
+  /* background-color: rgba(160, 186, 224, 0.2); */
+  /* background-color: rgba(54, 116, 224, 0.1); */
+  /* background-color: rgba(0, 0, 0, 0.9); */
+  /* background-color: rgba(255, 255, 255, 0.5); */
+  /* border: 1px solid rgba(0, 0, 0, 0.5); */
+
+  backdrop-filter: blur(2px);
+  /* box-shadow: 4px 4px 6px rgb(172, 201, 251); */
+  box-shadow: 4px 4px 6px rgb(200, 200, 200);
+  border-radius: 20px;
+
+  /* position: absolute; */
+  position: fixed;
+  z-index: 20;
+  top: 0;
+
+  transform: translateX(-105%);
+  transition: transform 0.6s ease;
+
+  padding: 20px;
+  padding-top: 50px;
+
+  margin: 0;
+
+  overflow-y: scroll;
+}
+
+#menu_toggler {
+  position: fixed;
+
+  width: 50px;
+  /* height: 50px; */
+  /* height: 100vh; */
+
+  top: 0;
+
+  /* background-color: rgba(0, 0, 0, 0.6); */
+
+  padding-top: 15px;
+  padding-left: 15px;
+
+  /* border: 1px solid red; */
+
+  /* So we can fade it in and out and move left/right */
+  -webkit-transition: transform 0.5s ease, opacity 1.5s ease-in;
+  -moz-transition: transform 0.5s ease, opacity 1.5s ease-in;
+  -ms-transition: transform 0.5s ease, opacity 1.5s ease-in;
+  -o-transition: transform 0.5s ease, opacity 1.5s ease-in;
+  transition: transform 0.5s ease, opacity 1.5s ease-in;
+
+  opacity: 0;
+}
+
+#years_section {
+  /* border: 1px solid blue; */
+
+  padding: 0;
+}
+
+#years_section p {
+  /* color: rgb(151, 151, 151);
+  color: black; */
+  color: rgb(100, 100, 100);
+  margin-top: 0;
+}
+
+/* Menu Years Grid Options  */
+#menu_years_grid_options {
+  /* border: 1px solid red; */
+
+  /* display: flex; */
+}
+
+#remove_all_div {
+  padding-top: 20px;
+  padding-bottom: 10px;
+
+  /* border: 1px solid green; */
+
+  float: left;
+  font-family: "Poppins_regular";
+  font-size: 15px;
+}
+
+#remove_all {
+  color: rgb(150, 150, 150);
+  opacity: 1;
+  visibility: visible;
+
+  -webkit-transition: opacity 0.6s, visibility 0.7s, color 0.2s ease-in-out;
+  -moz-transition: opacity 0.6s, visibility 0.7s, color 0.2s ease-in-out;
+  -ms-transition: opacity 0.6s, visibility 0.7s, color 0.2s ease-in-out;
+  -o-transition: opacity 0.6s, visibility 0.7s, color 0.2s ease-in-out;
+  transition: opacity 0.6s, visibility 0.7s, color 0.2s ease-in-out;
+}
+
+#remove_all:hover {
+  cursor: pointer;
+  color: rgb(100, 100, 100);
+}
+/* --------- SORTING OPTIONS --------- */
+.sorting_options_div {
+  /* display: inline-grid;
+  grid-template-columns: auto auto auto; */
+
+  display: flex;
+
+  /* border: 1px solid red; */
+
+  /* width: 280px; */
+  padding-top: 20px;
+  padding-bottom: 10px;
+
+  float: right;
+  /* float: left; */
+
+  /* border: 1px solid blue; */
+  font-family: "Poppins_regular";
+}
+
+#sort_by_menu {
+  color: rgb(108, 108, 108);
+  margin-right: 5px;
+
+  /* border: 1px solid black; */
+  font-family: "Poppins_regular";
+  font-size: 15px;
+}
+
+.sorting_option {
+  color: rgb(135, 135, 135);
+
+  font-size: 15px;
+
+  text-align: end;
+
+  margin-left: 15px;
+
+  /* border: 1px solid red; */
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -ms-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
+}
+
+.sorting_option:hover {
+  cursor: pointer;
+}
+
+.selectedSortingOption {
+  /* color: rgb(100, 100, 100); */
+  color: rgb(54, 116, 224);
+}
+/* ----------------------------------- */
+
+/* ---------- TYPE INPUT --------------*/
+
+.menu_input_container {
+  /* border: 1px solid red; */
+
+  display: flex;
+
+  margin-bottom: 15px;
+}
+
+#years_title {
+  /* color: rgb(108, 108, 108); */
+
+  font-family: "Poppins_light";
+  font-size: 40px;
+
+  /* border: 1px solid red; */
+}
+
+.menu_input_container p {
+  margin: 0;
+
+  font-family: "Poppins_light";
+  font-size: 40px;
+}
+
+.input_box {
+  display: flex;
+
+  border-bottom: 2px solid rgb(54, 116, 224);
+  width: 90px;
+
+  margin: 0;
+  padding: 0;
+
+  margin-left: 15px;
+}
+
+p#inputted_year {
+  margin: 0;
+  padding: 0;
+
+  color: rgb(54, 116, 224);
+}
+
+span#menu_year_input_caret {
+  color: rgb(54, 116, 224);
+
+  font-family: "Poppins_light";
+  font-size: 40px;
+
+  animation: caretAnFramesMenu 1.1s ease-in-out 0s infinite;
+}
+
+@keyframes caretAnFramesMenu {
+  0%,
+  50% {
+    color: rgb(54, 116, 224);
+  }
+
+  51%,
+  100% {
+    color: transparent;
+  }
+}
+/* ----------------------------------- */
+
+#menu_cloudP_infobox {
+  border: 1px solid rgb(108, 108, 108, 0.6);
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.25);
+
+  position: absolute;
+  z-index: 25;
+
+  width: 335px;
+
+  padding: 15px;
+  left: 400px;
+
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: visibility 1s, opacity 0.5s linear;
+  -moz-transition: visibility 1s, opacity 0.5s linear;
+  -ms-transition: visibility 1s, opacity 0.5s linear;
+  -o-transition: visibility 1s, opacity 0.5s linear;
+  transition: visibility 1s, opacity 0.5s linear;
+}
+
+#menu_cloudP_infobox img {
+  width: 100%;
+}
+
+#menu_icon {
+  /* width: 100%; */
+  width: 40px;
+}
+
+/* Maximum number of years alert message */
+#maximum_number_years_alert {
+  /* border: 1px solid rgba(241, 196, 196, 0.6); */
+  /* border: 1px solid rgb(227, 36, 36); */
+  border: 1px solid rgb(54, 116, 224);
+
+  border-radius: 4px;
+  background-color: white;
+  /* box-shadow: 5px 5px 3px rgba(227, 36, 36, 0.5); */
+  box-shadow: 5px 5px 3px rgba(54, 116, 224, 0.5);
+
+  display: inline-block;
+
+  padding: 15px;
+
+  /* position: fixed;
+  z-index: 20; */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-103%);
+
+  -webkit-transition: transform 0.5s ease;
+  -moz-transition: transform 0.5s ease;
+  -ms-transition: transform 0.5s ease;
+  -o-transition: transform 0.5s ease;
+  transition: transform 0.5s ease;
+}
+
+#maximum_number_years_alert p {
+  font-family: "Poppins_regular";
+  color: rgb(100, 100, 100);
+  /* color: rgb(227, 36, 36); */
+
+  margin: 0;
+}

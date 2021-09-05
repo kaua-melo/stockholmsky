@@ -1,13 +1,84 @@
+/* Loading fonts that will be used across the whole app */
+
+@font-face {
+  font-family: Poppins_thin;
+  src: local("Poppins_thin"),
+    url(./assets/fonts/Poppins/Poppins-Thin.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Poppins_extraLight;
+  src: local("Poppins_extraLight"),
+    url(./assets/fonts/Poppins/Poppins-ExtraLight.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Poppins_light;
+  src: local("Poppins_light"),
+    url(./assets/fonts/Poppins/Poppins-Light.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Poppins_regular;
+  src: local("Poppins_regular"),
+    url(./assets/fonts/Poppins/Poppins-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Poppins_medium;
+  src: local("Poppins_medium"),
+    url(./assets/fonts/Poppins/Poppins-Medium.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Roboto_regular;
+  src: local("Roboto_regular"),
+    url(./assets/fonts/Roboto/Roboto-Regular.ttf) format("truetype");
+}
+
+/* @font-face {
+  font-family: Epilogue_extraLight;
+  src: local("Epilogue_extraLight"),
+    url(./assets/fonts/Epilogue/static/Epilogue-ExtraLight.ttf)
+      format("truetype");
+}
+@font-face {
+  font-family: Epilogue_light;
+  src: local("Epilogue_extraLight"),
+    url(./assets/fonts/Epilogue/static/Epilogue-Light.ttf) format("truetype");
+}
+@font-face {
+  font-family: Epilogue_regular;
+  src: local("Epilogue_extraLight"),
+    url(./assets/fonts/Epilogue/static/Epilogue-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: Epilogue_bold;
+  src: local("Epilogue_bold"),
+    url(./assets/fonts/Epilogue/static/Epilogue-Bold.ttf) format("truetype");
+} */
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  margin: 0 0;
+  width: 100vw;
+  height: 100vh;
+  /* display: block;
+
+  /* background-color: pink; */
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

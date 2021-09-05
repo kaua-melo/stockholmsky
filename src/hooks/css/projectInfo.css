@@ -1,0 +1,214 @@
+#projectInfo_container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(54, 116, 224, 0.9);
+
+  z-index: 5;
+
+  opacity: 0;
+  visibility: hidden;
+
+  -webkit-transition: visibility 0.4s, opacity 0.4s ease-in-out;
+  -moz-transition: visibility 0.4s, opacity 0.4s ease-in-out;
+  -ms-transition: visibility 0.4s, opacity 0.4s ease-in-out;
+  -o-transition: visibility 0.4s, opacity 0.4s ease-in-out;
+  transition: visibility 0.4s, opacity 0.4s ease-in-out;
+}
+
+#projectInfo_container p,
+h1,
+h2 {
+  color: white;
+}
+
+#projectInfo_container p {
+  font-size: 16px;
+}
+
+#projectInfo_container h1 {
+  font-size: 60px;
+}
+
+#info_grid {
+  /* border: 1px solid black; */
+
+  width: 60vw;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+
+  display: grid;
+  grid-template-columns: 95% 5%;
+
+  -webkit-transition: width 0.4s ease-in-out;
+  -moz-transition: width 0.4s ease-in-out;
+  -ms-transition: width 0.4s ease-in-out;
+  -o-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+#container_scroll {
+  width: 100%;
+  height: 100%;
+
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+#text_container {
+  /* width: 50vw; */
+
+  /* Centralizing */
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: 50px; */
+  margin-bottom: 50px;
+
+  padding-left: 30px;
+  padding-right: 30px;
+
+  /* border: 1px solid white; */
+
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+#text_container p {
+  font-family: "Poppins_regular";
+}
+
+#text_container h1,
+#text_container h2 {
+  font-family: "Poppins_extraLight";
+  margin-bottom: 0;
+}
+
+#text_container h2 {
+  font-size: 40px;
+}
+
+#text_container img {
+  width: 100%;
+}
+
+#text_container a {
+  color: white;
+}
+
+#text_container ul {
+  color: white;
+}
+
+.photo_legend {
+  color: white;
+  width: 100%;
+
+  margin-top: 5px;
+  margin-bottom: 20px;
+
+  text-align: right;
+  /* border: 1px solid black; */
+}
+/* #text_container p {
+  font-family: "Poppins_regular";
+} */
+
+#close_info_container {
+  /* position: absolute; */
+  position: relative;
+
+  top: 60px;
+  left: 0px;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0px;
+
+  /* border: 1px solid white; */
+}
+#close_info_container:hover {
+  cursor: pointer;
+}
+
+#close_info_border {
+  position: absolute;
+
+  width: 50%;
+  height: 50%;
+
+  /* Centralizing vertically and horizontally */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border: 1px solid white;
+  border-radius: 50%;
+
+  -webkit-transition: height 0.4s ease-in-out, width 0.2s ease-in-out;
+  -moz-transition: height 0.4s ease-in-out, width 0.2s ease-in-out;
+  -ms-transition: height 0.4s ease-in-out, width 0.2s ease-in-out;
+  -o-transition: height 0.4s ease-in-out, width 0.2s ease-in-out;
+  transition: height 0.4s ease-in-out, width 0.2s ease-in-out;
+}
+
+#close_info_border img {
+  position: absolute;
+  /* Centralizing vertically and horizontally */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 50%;
+
+  opacity: 0;
+
+  -webkit-transition: opacity 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
+}
+
+#case1,
+#case2 {
+  max-width: 600px !important;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#pehrs_diary_div {
+  max-width: 600px !important;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#projectInfo_footer {
+  margin-top: 50px;
+  text-align: center;
+}
+
+/* When screen's width is smaller than  */
+@media only screen and (max-width: 1300px) {
+  #info_grid {
+    width: 60vw;
+  }
+}
+
+@media only screen and (max-width: 1040px) {
+  #info_grid {
+    width: 70vw;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  #info_grid {
+    width: 95vw;
+  }
+}

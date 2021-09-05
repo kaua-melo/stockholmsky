@@ -1,0 +1,15 @@
+#menu_years_grid_svg {
+  width: 100%;
+  border-top: 1px solid rgb(207, 207, 207);
+  border-bottom: 1px solid rgb(207, 207, 207);
+
+  padding-top: 10px;
+}
+
+.menu_year_text {
+  /* fill: white; */
+
+  /* font-family: "Poppins_light"; */
+  font-family: "Roboto_regular";
+  font-size: 13px;
+}

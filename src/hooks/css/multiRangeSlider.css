@@ -1,0 +1,118 @@
+.mslider_container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  /* Centering everything inside this div */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider_min,
+.slider_max {
+  width: 100%;
+}
+/* Making the two slides invisible */
+.slider_max,
+.slider_min,
+.slider_max::-webkit-slider-thumb,
+.slider_min::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+/* Making the two slides on top of each other */
+.slider_min_wrapper,
+.slider_max_wrapper {
+  width: 100%;
+}
+
+.slider_max,
+.slider_min {
+  pointer-events: none;
+  position: absolute;
+  height: 0;
+  /* width: 50%; */
+  outline: none;
+}
+/* ------------------------------- */
+
+/* --------------- THUMBS ---------------- */
+/* So the thumbs stay on top of the slider */
+.slider_min {
+  z-index: 3;
+  margin: 0px;
+}
+.slider_max {
+  z-index: 4;
+  margin: 0px;
+}
+
+/* For Chrome browsers */
+.slider_min::-webkit-slider-thumb,
+.slider_max::-webkit-slider-thumb {
+  background-color: rgb(108, 108, 108);
+  border: none;
+  border-radius: 50%;
+  /* box-shadow: 0 0 1px 1px #ced4da; */
+  /* border: 1px solid black; */
+  cursor: pointer;
+  height: 14px;
+  width: 14px;
+  /* margin-top: 3px; */
+  pointer-events: all;
+  position: relative;
+}
+
+/* For Firefox browsers */
+.slider_min::-moz-range-thumb,
+.slider_max::-moz-range-thumb {
+  background-color: rgb(108, 108, 108);
+  border: none;
+  border-radius: 50%;
+  /* box-shadow: 0 0 1px 1px #ced4da; */
+  /* border: 1px solid black; */
+  cursor: pointer;
+  height: 14px;
+  width: 14px;
+  /* margin-top: 3px; */
+  pointer-events: all;
+  position: relative;
+}
+/* --------------------------------------- */
+
+/* ------------- Track ------------------- */
+.slider {
+  position: relative;
+
+  width: 100%;
+  /* height: 10px; */
+
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.track,
+.selected_range {
+  border-radius: 3px;
+  height: 5px;
+  position: absolute;
+  /* border: 0.5px solid blue; */
+  transform: translateY(-50%);
+}
+
+.track {
+  background-color: rgb(207, 207, 207);
+  width: 100%;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  z-index: 1;
+}
+
+.selected_range {
+  background-color: rgb(108, 108, 108);
+  z-index: 2;
+}
+/* --------------------------------------- */

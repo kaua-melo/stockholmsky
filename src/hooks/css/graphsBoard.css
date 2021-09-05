@@ -1,0 +1,116 @@
+div.svg_board_container {
+  width: 100%;
+  height: auto;
+
+  margin-top: 5px;
+
+  /* border: 1px solid gray; */
+}
+
+.skyphoto_infobox {
+  /* width: 100px;
+  height: 100px; */
+  position: absolute;
+  z-index: 10;
+
+  top: 50%;
+  left: 50%;
+
+  border: 1px solid rgb(108, 108, 108, 0.6);
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: left 0.8s, top 0.8s, visibility 1s, opacity 0.5s linear;
+  -moz-transition: left 0.8s, top 0.8s, visibility 1s, opacity 0.5s linear;
+  -ms-transition: left 0.8s, top 0.8s, visibility 1s, opacity 0.5s linear;
+  -o-transition: left 0.8s, top 0.8s, visibility 1s, opacity 0.5s linear;
+  transition: left 0.8s, top 0.8s, visibility 1s, opacity 0.5s linear;
+}
+
+.skyphoto_infobox p {
+  margin: 0;
+  /* font-family: "Epilogue_light"; */
+  font-family: "Poppins_light";
+
+  font-size: 18px;
+  line-height: 1.1em;
+  color: rgb(108, 108, 108);
+}
+
+p.skyphoto_infobox_day {
+  margin-bottom: 10px;
+}
+
+.zoomed_photo {
+  width: 20px;
+  height: 15px;
+  position: absolute;
+  z-index: 10;
+
+  top: 50%;
+  left: 50%;
+
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 0;
+  margin: 0;
+
+  opacity: 0;
+  visibility: hidden;
+
+  /* Centering stuff */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zoomed_photo p {
+  color: rgb(180, 180, 180);
+
+  font-family: "Poppins_light";
+
+  /* font-size: 60px; */
+  font-size: 2em;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  margin-right: 20px;
+  margin-top: 10px;
+
+  -webkit-transition: color 0.5s;
+  -moz-transition: color 0.5s;
+  -ms-transition: color 0.5s;
+  -o-transition: color 0.5s;
+  transition: color 0.5s;
+}
+
+.zoomed_photo p:hover {
+  cursor: pointer;
+
+  color: white;
+}
+
+.zommed_image {
+  /* width: 100%;
+  height: auto; */
+  max-width: 100%;
+  max-height: 100%;
+
+  display: block;
+
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.skyphoto_infobox {
+  max-width: 280px;
+}
+
+p.generic_infobox_message {
+  line-height: 1.5em;
+}
