@@ -212,7 +212,7 @@ function GraphsBoard(props) {
   // Changed sorting method.
   useEffect(() => {
     // props.selectedMethod
-    // 0 -> Nothing => music is selected
+    // 0 -> music is selected
     // 1 -> cloud %
     // 2 -> date
     // 3 -> month

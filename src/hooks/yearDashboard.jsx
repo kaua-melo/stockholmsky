@@ -27,7 +27,7 @@ function YearDashboard(props) {
   // 3 -> > X px
   const [dashboardDisplayingMode, setDashboardDisplayingMode] = useState(3);
 
-  // 0 -> Nothing => music is selected
+  // 0 -> music is selected
   // 1 -> cloud %
   // 2 -> date
   // 3 -> month
@@ -123,15 +123,16 @@ function YearDashboard(props) {
     if (!musicMethod) {
       // Show the selected SVG (blue)
       if (selectedMusicIcon.current) {
-        selectedMusicIcon.current.style["visibility"] = "visible";
-        selectedMusicIcon.current.style["opacity"] = 1;
+        alert("Not implemented yet :( Soon!");
+        // selectedMusicIcon.current.style["visibility"] = "visible";
+        // selectedMusicIcon.current.style["opacity"] = 1;
       }
 
       // Let's unhighlight all sorting methods.
-      setSelectedMethod(0);
+      // setSelectedMethod(0);
 
       // Let's save the musicMethod state.
-      setMusicMethod(true);
+      // setMusicMethod(true);
     }
     // If the music icon was already selected:
     else {
