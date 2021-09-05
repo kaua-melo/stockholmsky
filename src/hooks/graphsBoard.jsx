@@ -1,9 +1,6 @@
 import "./css/graphsBoard.css";
 import * as d3 from "d3";
 
-// Images to display
-import skyImages from "./skyImages";
-
 import { useEffect, useState, useRef, Fragment } from "react";
 
 function GraphsBoard(props) {

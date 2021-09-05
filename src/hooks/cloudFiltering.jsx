@@ -9,42 +9,200 @@ import {
 } from "react";
 
 import MultiRangeSlider from "./multiRangeSlider";
-import skyImages from "./skyImages";
 
 // function CloudFiltering(props) {
 const CloudFiltering = memo(function CloudFiltering(props) {
   const [filterMinValue, setFilterMinValue] = useState(0);
   const [filterMaxValue, setFilterMaxValue] = useState(100);
 
-  const [minValueImg, setMinValueImg] = useState(skyImages["s0"]);
-  const [maxValueImg, setMaxValueImg] = useState(skyImages["s9"]);
+  const [minValueImg, setMinValueImg] = useState(null);
+  const [maxValueImg, setMaxValueImg] = useState(null);
 
   const infoboxMinP = useRef(null);
   const infoboxMaxP = useRef(null);
 
   const cloudPInfobox = useRef(null);
 
+  // This object will contain the 'info_photos.json'. Which is the json with
+  //  information about all the photos that we have on the database that we can display.
+  // "photosInfo" looks like this:
+  // {
+  //   "imageExtension": "jpg",
+  //   "cloudPercentagesAvailable": [0, 1, 7, 8],
+  //   "photos": [{
+  //       "percentage": 0,
+  //       "ids": [0, 1, 2, 3, 4, 5, 6]
+  //     },
+  //     {
+  //       "percentage": 1,
+  //       "ids": [10, 22, 13, 15]
+  //     }
+  //   ]
+  // }
+  const [photosInfo, _setPhotosInfo] = useState(null);
+  const photosInfoRef = useRef(photosInfo);
+  const setPhotosInfo = (data) => {
+    photosInfoRef.current = data;
+    _setPhotosInfo(data);
+  };
+
+  // Component loaded
   useEffect(() => {
-    // console.log("-- useEffect cloudFiltering");
-  });
+    // Loading 'info_photos.json'
+    const getPhotosInfo = () => {
+      fetch(process.env.PUBLIC_URL + "/photos/info_photos.json", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (myJson) {
+          setPhotosInfo(myJson);
+        });
+    };
+    getPhotosInfo();
+  }, []);
+
+  // photosInfo is loaded. Let's
+  useEffect(() => {
+    if (photosInfoRef.current) {
+      // It might happen that in our database we don't have all %clouds (from 0 to 100%).
+      // Here we get the closest %cloud available in our database to 'min' on the filtering
+      // tool.
+      var closestPCloudAvailable = getClosestItem(
+        filterMinValue,
+        photosInfoRef.current["cloudPercentagesAvailable"]
+      );
+      const minCloudPercentageAvailable = closestPCloudAvailable;
+      // And we do the same to the 'max' on the filtering tool.
+      closestPCloudAvailable = getClosestItem(
+        filterMaxValue,
+        photosInfoRef.current["cloudPercentagesAvailable"]
+      );
+      const maxCloudPercentageAvailable = closestPCloudAvailable;
+
+      // Setting the minValue and maxValue images ----------------------------
+      // minValue image:
+      // minPhotosInfo = { "percentage": 0, "ids": [0, 1, 2, 3, 4, 5, 6] }
+      var minPhotosInfo = photosInfoRef.current["photos"].filter(
+        (p) => p["percentage"] === minCloudPercentageAvailable
+      )[0];
+      var minPhotoId = minPhotosInfo["ids"][0];
+
+      setMinValueImg(
+        process.env.PUBLIC_URL +
+          "/photos/" +
+          minCloudPercentageAvailable +
+          "_" +
+          minPhotoId +
+          "." +
+          photosInfoRef.current["imageExtension"]
+      );
+
+      // Setting the maxValue image:
+      var maxPhotosInfo = photosInfoRef.current["photos"].filter(
+        (p) => p["percentage"] === maxCloudPercentageAvailable
+      )[0];
+      var maxPhotoId = maxPhotosInfo["ids"][0];
+
+      setMaxValueImg(
+        process.env.PUBLIC_URL +
+          "/photos/" +
+          maxCloudPercentageAvailable +
+          "_" +
+          maxPhotoId +
+          "." +
+          photosInfoRef.current["imageExtension"]
+      );
+    }
+  }, [photosInfoRef.current]);
 
   // function updateFilteringValues(min, max) {
   const updateFilteringValues = useCallback((min, max) => {
-    setFilterMinValue(min);
-    setFilterMaxValue(max);
+    if (photosInfoRef.current) {
+      setFilterMinValue(min);
+      setFilterMaxValue(max);
 
-    // Setting the minValue image
-    setMinValueImg(skyImages["s" + Math.floor(min / 10)]);
+      // It might happen that in our database we don't have all %clouds (from 0 to 100%).
+      // Here we get the closest %cloud available in our database to 'min' on the filtering
+      // tool.
+      var closestPCloudAvailable = getClosestItem(
+        min,
+        photosInfoRef.current["cloudPercentagesAvailable"]
+      );
+      const minCloudPercentageAvailable = closestPCloudAvailable;
+      // And we do the same to the 'max' on the filtering tool.
+      closestPCloudAvailable = getClosestItem(
+        max,
+        photosInfoRef.current["cloudPercentagesAvailable"]
+      );
+      const maxCloudPercentageAvailable = closestPCloudAvailable;
 
-    if (max === 100) {
-      setMaxValueImg(skyImages["s9"]);
-    } else {
-      setMaxValueImg(skyImages["s" + Math.floor(max / 10)]);
+      // Setting the minValue and maxValue images ----------------------------
+      // minValue image:
+      // minPhotosInfo = { "percentage": 0, "ids": [0, 1, 2, 3, 4, 5, 6] }
+      var minPhotosInfo = photosInfoRef.current["photos"].filter(
+        (p) => p["percentage"] === minCloudPercentageAvailable
+      )[0];
+      var minPhotoId = minPhotosInfo["ids"][0];
+
+      setMinValueImg(
+        process.env.PUBLIC_URL +
+          "/photos/" +
+          minCloudPercentageAvailable +
+          "_" +
+          minPhotoId +
+          "." +
+          photosInfoRef.current["imageExtension"]
+      );
+
+      // Setting the maxValue image:
+      var maxPhotosInfo = photosInfoRef.current["photos"].filter(
+        (p) => p["percentage"] === maxCloudPercentageAvailable
+      )[0];
+      var maxPhotoId = maxPhotosInfo["ids"][0];
+
+      setMaxValueImg(
+        process.env.PUBLIC_URL +
+          "/photos/" +
+          maxCloudPercentageAvailable +
+          "_" +
+          maxPhotoId +
+          "." +
+          photosInfoRef.current["imageExtension"]
+      );
+      // ---------------------------------------------------------------------
+
+      // Setting the minValue image
+      // setMinValueImg(skyImages["s" + Math.floor(min / 10)]);
+
+      // if (max === 100) {
+      //   setMaxValueImg(skyImages["s9"]);
+      // } else {
+      //   setMaxValueImg(skyImages["s" + Math.floor(max / 10)]);
+      // }
+
+      // Updating the Filtering values on the mother's component:
+      props.handleFilterValuesChanged(min, max);
     }
-
-    // Updating the Filtering values on the mother's component:
-    props.handleFilterValuesChanged(min, max);
   }, []);
+
+  // Returns the closest item on an array
+  function getClosestItem(value, array) {
+    return array.reduce((a, b) => {
+      let aDiff = Math.abs(a - value);
+      let bDiff = Math.abs(b - value);
+
+      if (aDiff === bDiff) {
+        return a > b ? a : b;
+      } else {
+        return bDiff < aDiff ? b : a;
+      }
+    });
+  }
 
   // function showInfobox() {
   const showInfobox = useCallback(() => {
@@ -187,12 +345,7 @@ const CloudFiltering = memo(function CloudFiltering(props) {
       );
     }
   }
-  return (
-    <Fragment>
-      {/* {console.log("-- cloudFiltering - rendering")} */}
-      {renderCloudFiltering()}
-    </Fragment>
-  );
+  return <Fragment>{renderCloudFiltering()}</Fragment>;
 });
 
 export default CloudFiltering;

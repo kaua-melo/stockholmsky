@@ -63,20 +63,21 @@ function ProjectInfo(props) {
                 src={process.env.PUBLIC_URL + "/projectInfo_cloudday2.jpeg"}
                 alt=""
               ></img>
-              <div class="photo_legend">
+              <div className="photo_legend">
                 <span>
                   <i>
-                    This is not a black and white picture. Karlbergs Slott,
-                    Stockholm - 2021.3.12.
+                    This is not a black and white photo. Karlbergs Slott,
+                    Stockholm - 12 March 2021.
                   </i>
                 </span>
               </div>
               <p>
                 Quikly, the conversation escalates to an attempt to explain why
                 many here are so reserved, melancholic, and find it difficult to
-                make friends. It also typically finishes with a comparison with
-                an experience the person had abroad, in some warmer country with
-                a bluer sky.
+                make friends. It also typically moves to a comparison with an
+                experience the person had abroad, in some warmer country with a
+                bluer sky, and finally finishes with the person's retirement
+                plans about moving to Portugal, Spain, or Italy.
               </p>
               <p>
                 Between us and the so desired soul-lifting blue sky, the main
@@ -95,7 +96,17 @@ function ProjectInfo(props) {
                 dark), 0% cloud means that the sky had no cloud and therefore
                 was completely blue:
               </p>
-              <img src={process.env.PUBLIC_URL + "/blue_sky.jpg"} alt=""></img>
+              {/* <img src={process.env.PUBLIC_URL + "/blue_sky.jpg"} alt=""></img> */}
+              <img
+                src={process.env.PUBLIC_URL + "/sunnyday_resized2.jpg"}
+                alt=""
+              ></img>
+              <div className="photo_legend">
+                <span>
+                  <i>Karlbergs Slott, Stockholm - 5 September 2021.</i>
+                </span>
+              </div>
+
               {/* <img
                 src={
                   process.env.PUBLIC_URL + "/photo5874973442669918324_copy.jpg"
@@ -172,7 +183,7 @@ function ProjectInfo(props) {
                   src={process.env.PUBLIC_URL + "/pehrs_diary_resized.png"}
                   alt=""
                 ></img>
-                <div class="photo_legend">
+                <div className="photo_legend">
                   <span>
                     <i>
                       Weather observation diary of the astronomer Pehr Wilhelm
@@ -204,8 +215,7 @@ function ProjectInfo(props) {
               </p>
               <h2> Tech</h2>
               <p>
-                The website was built in React and the visualizations done with
-                D3.js.
+                The website was built in React and the visualizations in D3.js.
               </p>
               <p>
                 In order to calculate the percentage of cloud on each image, a
@@ -230,7 +240,7 @@ function ProjectInfo(props) {
               </p>
               <ul>
                 <li>1756-01-01 to 1784-06-01 -> Scale: 1 to 3.</li>
-                <li>1784-06-02 to 1815-12-31 -> Scale:1 to 6.</li>
+                <li>1784-06-02 to 1815-12-31 -> Scale: 1 to 6.</li>
                 <li>1816-01-01 to 1841-06-30 -> Scale: 1 to 4.</li>
                 <li>1841-07-01 to 1858-12-31 -> Scale: 1 to 6.</li>
                 <li>1859-01-01 to 1872-12-31 -> Scale: 0 to 4.</li>
@@ -244,8 +254,8 @@ function ProjectInfo(props) {
                 comparisons of amount of cloud over the centuries are not
                 encouraged due to the different types of measurements during the
                 years and due to the subjectivity of different observers'
-                interpretations of the sky. More info on this can be found
-                on&nbsp;
+                interpretations of the sky. More information on this can be
+                found on&nbsp;
                 <a
                   href="https://scholar.google.se/citations?view_op=view_citation&hl=en&user=nXUPda4AAAAJ&cstart=20&pagesize=80&sortby=pubdate&citation_for_view=nXUPda4AAAAJ:blknAaTinKkC"
                   target="_blank"
