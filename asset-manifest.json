@@ -1,13 +1,27 @@
 {
   "files": {
-    "main.css": "/stockholmsky/static/css/main.ec9b7055.chunk.css",
-    "main.js": "/stockholmsky/static/js/main.7e7748ec.chunk.js",
-    "runtime-main.js": "/stockholmsky/static/js/runtime-main.00f5cea4.js",
-    "static/js/2.4c06a24e.chunk.js": "/stockholmsky/static/js/2.4c06a24e.chunk.js",
-    "static/js/3.e61a83ff.chunk.js": "/stockholmsky/static/js/3.e61a83ff.chunk.js",
+    "main.css": "/stockholmsky/static/css/main.c55a2f59.chunk.css",
+    "main.js": "/stockholmsky/static/js/main.9819deeb.chunk.js",
+    "runtime-main.js": "/stockholmsky/static/js/runtime-main.704565be.js",
+    "static/js/2.0c4a79d7.chunk.js": "/stockholmsky/static/js/2.0c4a79d7.chunk.js",
+    "static/js/3.de087358.chunk.js": "/stockholmsky/static/js/3.de087358.chunk.js",
     "index.html": "/stockholmsky/index.html",
-    "static/js/2.4c06a24e.chunk.js.LICENSE.txt": "/stockholmsky/static/js/2.4c06a24e.chunk.js.LICENSE.txt",
+    "static/js/2.0c4a79d7.chunk.js.LICENSE.txt": "/stockholmsky/static/js/2.0c4a79d7.chunk.js.LICENSE.txt",
+    "static/media/0.7ef14947.wav": "/stockholmsky/static/media/0.7ef14947.wav",
     "static/media/1.1cb4de0d.png": "/stockholmsky/static/media/1.1cb4de0d.png",
+    "static/media/1.5424d351.wav": "/stockholmsky/static/media/1.5424d351.wav",
+    "static/media/10.128d2992.wav": "/stockholmsky/static/media/10.128d2992.wav",
+    "static/media/11.2b511734.wav": "/stockholmsky/static/media/11.2b511734.wav",
+    "static/media/12.ccd3dc05.wav": "/stockholmsky/static/media/12.ccd3dc05.wav",
+    "static/media/13.af61dd45.wav": "/stockholmsky/static/media/13.af61dd45.wav",
+    "static/media/2.86a73e69.wav": "/stockholmsky/static/media/2.86a73e69.wav",
+    "static/media/3.6ae797d5.wav": "/stockholmsky/static/media/3.6ae797d5.wav",
+    "static/media/4.75a5320f.wav": "/stockholmsky/static/media/4.75a5320f.wav",
+    "static/media/5.70daa53f.wav": "/stockholmsky/static/media/5.70daa53f.wav",
+    "static/media/6.1f1d48c2.wav": "/stockholmsky/static/media/6.1f1d48c2.wav",
+    "static/media/7.efd12756.wav": "/stockholmsky/static/media/7.efd12756.wav",
+    "static/media/8.f6c42505.wav": "/stockholmsky/static/media/8.f6c42505.wav",
+    "static/media/9.51bc74eb.wav": "/stockholmsky/static/media/9.51bc74eb.wav",
     "static/media/index.css": "/stockholmsky/static/media/Roboto-Regular.a8d6ac03.ttf",
     "static/media/close_sign_inactivatted.27b69a47.svg": "/stockholmsky/static/media/close_sign_inactivatted.27b69a47.svg",
     "static/media/close_sign_white.965eacb4.svg": "/stockholmsky/static/media/close_sign_white.965eacb4.svg",
@@ -17,9 +31,9 @@
     "static/media/music_icon_unselected.db60498a.svg": "/stockholmsky/static/media/music_icon_unselected.db60498a.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.00f5cea4.js",
-    "static/js/2.4c06a24e.chunk.js",
-    "static/css/main.ec9b7055.chunk.css",
-    "static/js/main.7e7748ec.chunk.js"
+    "static/js/runtime-main.704565be.js",
+    "static/js/2.0c4a79d7.chunk.js",
+    "static/css/main.c55a2f59.chunk.css",
+    "static/js/main.9819deeb.chunk.js"
   ]
 }
