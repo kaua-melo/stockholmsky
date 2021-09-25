@@ -3,6 +3,7 @@ import "./css/fullBoard.css";
 import Menu from "./menu";
 import ProjectInfo from "./projectInfo";
 import { Fragment, useState, useEffect, useRef } from "react";
+import * as Tone from "tone"; // tone.js to play audio :)
 
 // This will contain the whole app after the intro.
 // The menu, the years grid, the info, etc...
@@ -24,6 +25,15 @@ function FullBoard(props) {
 
   const [showProjectInfo, setShowProjectInfo] = useState(false);
 
+  // SOUND ---------------------------------------------------------------
+  // Creating a synth and connect it to the main output (your speakers).
+  // This will be used by the yearDashboards to play song.
+  const [synth, setSynth] = useState(new Tone.Synth().toDestination());
+
+  // Array with the years that are playing song now.
+  const [yearsPlaying, setYearsPlaying] = useState([]);
+  // ---------------------------------------------------------------------
+
   // Methods ==========================================
   // 'Constructor'
   useEffect(() => {
@@ -35,6 +45,22 @@ function FullBoard(props) {
     }, 10);
   }, [props.year]);
 
+  // Add and remove year from the yearsPlaying array ---------------------
+  function removeYearFromPlayingList(year) {
+    // Cloning array
+    var cloneYearsPlaying = [...yearsPlaying];
+    // Removing the 'year' from the array
+    cloneYearsPlaying = cloneYearsPlaying.filter(function (value, index, arr) {
+      return value !== year;
+    });
+    // Setting the new array
+    setYearsPlaying(cloneYearsPlaying);
+  }
+  function addYearFromPlayingList(year) {
+    setYearsPlaying([...yearsPlaying, year]);
+  }
+  // ---------------------------------------------------------------------
+
   function removeYear(year) {
     // let's remove it.
     let newYearsShowing = yearsShowingRef.current.filter(function (el) {
@@ -44,8 +70,10 @@ function FullBoard(props) {
 
     // The layout is different when there are two years on the screen.
     adjustDashboardLayout();
-  }
 
+    // In case the year was playing song, remove it from the playing list.
+    removeYearFromPlayingList(year);
+  }
   function addYear(year) {
     setYearsShowing([...yearsShowingRef.current, year]);
 
@@ -112,6 +140,9 @@ function FullBoard(props) {
                   key={year}
                   index={index}
                   nYears={yearsShowing.length}
+                  // Song stuff:
+                  addYearFromPlayingList={addYearFromPlayingList}
+                  removeYearFromPlayingList={removeYearFromPlayingList}
                 />
               );
             })}

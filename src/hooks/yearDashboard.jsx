@@ -31,9 +31,12 @@ function YearDashboard(props) {
   // 1 -> cloud %
   // 2 -> date
   // 3 -> month
-  const [selectedMethod, setSelectedMethod] = useState(3);
-  // If true -> we are playing the music.
-  const [musicMethod, setMusicMethod] = useState(false);
+  const [selectedMethod, _setSelectedMethod] = useState(3);
+  const selectedMethodRef = useRef(selectedMethod);
+  const setSelectedMethod = (data) => {
+    selectedMethodRef.current = data;
+    _setSelectedMethod(data);
+  };
 
   const unselectedMusicIcon = useRef(null);
   const selectedMusicIcon = useRef(null);
@@ -105,34 +108,29 @@ function YearDashboard(props) {
 
   // Using 'useCallback' because we use React.memo on sortingOptions
   const handleChangeSortingMethod = useCallback((m) => {
-    setSelectedMethod(m);
-
     // If the music method was on, let's remove it.
-    if (musicMethod) {
+    if (selectedMethodRef.current === 0) {
       // Hide the selected SVG (blue)
       if (selectedMusicIcon.current) {
         selectedMusicIcon.current.style["visibility"] = "invisible";
         selectedMusicIcon.current.style["opacity"] = 0;
       }
-
-      setMusicMethod(false);
     }
+
+    setSelectedMethod(m);
   }, []);
 
   function handleOnClickMusic() {
-    if (!musicMethod) {
+    // If selectedMethod wasn't Music already.
+    if (selectedMethodRef.current !== 0) {
       // Show the selected SVG (blue)
       if (selectedMusicIcon.current) {
-        alert("Not implemented yet :( Soon!");
-        // selectedMusicIcon.current.style["visibility"] = "visible";
-        // selectedMusicIcon.current.style["opacity"] = 1;
+        selectedMusicIcon.current.style["visibility"] = "visible";
+        selectedMusicIcon.current.style["opacity"] = 1;
       }
 
       // Let's unhighlight all sorting methods.
-      // setSelectedMethod(0);
-
-      // Let's save the musicMethod state.
-      // setMusicMethod(true);
+      setSelectedMethod(0);
     }
     // If the music icon was already selected:
     else {
@@ -142,11 +140,8 @@ function YearDashboard(props) {
         selectedMusicIcon.current.style["opacity"] = 0;
       }
 
-      // Let's highlight a sorting methods.
+      // Let's highlight some sorting method (we decided for 'months' (3)).
       setSelectedMethod(3);
-
-      // Let's save the musicMethod state.
-      setMusicMethod(false);
     }
   }
   // ----------------------------------------------------------
@@ -269,6 +264,8 @@ function YearDashboard(props) {
             filterMin={filterMin}
             filterMax={filterMax}
             selectedMethod={selectedMethod}
+            addYearFromPlayingList={props.addYearFromPlayingList}
+            removeYearFromPlayingList={props.removeYearFromPlayingList}
           />
         </div>
       </div>

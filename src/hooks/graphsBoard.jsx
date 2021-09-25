@@ -1,12 +1,30 @@
 import "./css/graphsBoard.css";
 import * as d3 from "d3";
+import * as Tone from "tone"; // tone.js to play audio :)
 
 import { useEffect, useState, useRef, Fragment } from "react";
+
+import s0 from "../services/samples/0.wav";
+import s1 from "../services/samples/1.wav";
+import s2 from "../services/samples/2.wav";
+import s3 from "../services/samples/3.wav";
+import s4 from "../services/samples/4.wav";
+import s5 from "../services/samples/5.wav";
+import s6 from "../services/samples/6.wav";
+import s7 from "../services/samples/7.wav";
+import s8 from "../services/samples/8.wav";
+import s9 from "../services/samples/9.wav";
+import s10 from "../services/samples/10.wav";
+import s11 from "../services/samples/11.wav";
+import s12 from "../services/samples/12.wav";
+import s13 from "../services/samples/13.wav";
 
 function GraphsBoard(props) {
   // This is the D3 object that we'll be using to add, remove,
   //  move, etc  all the visuals inside the <svg>
   const [d3Obj, setD3Obj] = useState(null);
+
+  const [isSvgPopulated, setIsSvgPopulated] = useState(false);
 
   // DIMENTIONS
   // This will be update when the SVG is resized
@@ -25,6 +43,7 @@ function GraphsBoard(props) {
   const svgGraphsBoardContainer = useRef(null);
   const skyphotoInfobox = useRef(null);
   const zoomPhotoDiv = useRef(null);
+  const zoomedImage = useRef(null);
 
   // FILTERING VALUES ------------
   // We are creating filterMinRef instead of just using props.filterMin because
@@ -130,6 +149,17 @@ function GraphsBoard(props) {
   //  We do this so we repeat the images as little as possible.
   const [photosInfoCopy, setPhotosInfoCopy] = useState(null);
 
+  // Sound ----------------------------------------------------------------------
+  const [sequencer, _setSequencer] = useState(null);
+  const sequencerRef = useRef(sequencer);
+  const setSequencer = (data) => {
+    sequencerRef.current = data;
+    _setSequencer(data);
+  };
+  const [players, setPlayers] = useState(null);
+  const [isPlayingSound, setIsPlayingSound] = useState(false);
+  // ----------------------------------------------------------------------------
+
   // useEffects --------------------------------------------------
   // Component loaded
   useEffect(() => {
@@ -179,8 +209,32 @@ function GraphsBoard(props) {
       return () => {
         // Kill/disconnect the resize event when the component is destroyed.
         svgResizer.current.disconnect();
+
+        // Deleting the sequencer
+        sequencerRef.current.stop();
+        sequencerRef.current.clear();
       };
     }
+
+    // Creating the Tone players.
+    // For some reason, if we define the players inside the useState() the
+    //  app gets quite slow. So, that's why we are defining it here.
+    setPlayers({
+      p0: new Tone.Player(s0).toDestination(),
+      p1: new Tone.Player(s1).toDestination(),
+      p2: new Tone.Player(s2).toDestination(),
+      p3: new Tone.Player(s3).toDestination(),
+      p4: new Tone.Player(s4).toDestination(),
+      p5: new Tone.Player(s5).toDestination(),
+      p6: new Tone.Player(s6).toDestination(),
+      p7: new Tone.Player(s7).toDestination(),
+      p8: new Tone.Player(s8).toDestination(),
+      p9: new Tone.Player(s9).toDestination(),
+      p10: new Tone.Player(s10).toDestination(),
+      p11: new Tone.Player(s11).toDestination(),
+      p12: new Tone.Player(s12).toDestination(),
+      p13: new Tone.Player(s13).toDestination(),
+    });
   }, [props.data]);
 
   // d3 svg ('d3Obj') is ready to be populated.
@@ -189,6 +243,81 @@ function GraphsBoard(props) {
     // The d3Obj is now all set. Time to populate it with data.
     populateSvg();
   }, [d3Obj, monthNames, photosInfo, photosInfoCopy]);
+
+  // SYNTH / SONG
+  useEffect(() => {
+    // Once the svg is populated with everything, let's define the Synth behaviour.
+    if (isSvgPopulated && players) {
+      // Setting fadeIn and fadeOut to players so we avoid crackling
+      //  audios when playing them in sequence.
+      for (const [key, value] of Object.entries(players)) {
+        players[key].fadeIn = 0.05;
+        players[key].fadeOut = 0.05;
+      }
+
+      Tone.getContext().lookAhead = 0.09;
+
+      // Defining our Synth behaviour:
+      // Creating the sequencer loop -----------------------------------------------
+      setSequencer(
+        new Tone.Sequence(
+          function (time, col) {
+            // console.log("Bip.  time: " + time + "   col: " + col);
+
+            // Get the photos (DOM element) of the current column
+            var currentColumnPhotos = d3Obj.selectAll(".column-" + col)[0];
+            // 'c_indexes' is the array with % of cloud of each photo of the current column.
+            const c_indexes = [];
+            // Looping through each photo and pushing its %cloud to the c_indexes array.
+            currentColumnPhotos.forEach(function (photoElement, currentIndex) {
+              c_indexes.push(
+                parseInt(photoElement.attributes.c_index.nodeValue)
+              );
+            });
+
+            const sum = c_indexes.reduce((a, b) => a + b, 0); // Sum of all c_indexes of the column.
+            const avg = sum / c_indexes.length || 0; // Average c_index of the week.
+            // console.log("Avg: " + avg);
+            // PLAYING
+            players["p" + parseInt((13 * avg) / 100)].start();
+
+            // DRAWING
+            // Updating visuals in sync with the audio should happen here.
+            Tone.Draw.schedule(function () {
+              // Highlight the current column
+              d3Obj.selectAll(".column-" + col).attr("opacity", "0.4");
+
+              // Highlight the column number
+              d3Obj
+                .selectAll(".weekNumber-" + (col + 1))
+                .attr("fill", "rgb(54, 116, 224)");
+
+              // De-highlight the previous column
+              var previousColumn = col - 1;
+              if (previousColumn === -1) {
+                previousColumn = 52;
+              }
+              d3Obj.selectAll(".column-" + previousColumn).attr("opacity", "1");
+
+              // De-highlight the previous column number
+              d3Obj
+                .selectAll(".weekNumber-" + (previousColumn + 1))
+                .attr("fill", "rgb(170, 170, 170");
+            }, time);
+          },
+          [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+            36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+          ], // The callback function "function (time, col)" will be called
+          //  for every element of this array. Where "col" is the current element.
+          //
+          "0.45" // The duration the notes will be played in seconds.
+        )
+        //.start(0) // The delay it will take to start playing, in seconds.
+      );
+    }
+  }, [isSvgPopulated, players]);
 
   // SVG is resized (so we can update all dimentions).
   useEffect(() => {
@@ -319,21 +448,6 @@ function GraphsBoard(props) {
 
         return d3.ascending(a.day_number, b.day_number);
       })
-      // We need to append the 'mouseover' and 'mouseout' event again since the previous
-      //  one was for the other sorting methods.
-      .on("mouseover", function (d, i) {
-        // We show the infobox only for the photos which are not hidden (which
-        //  fall within the filtering range).
-        if (
-          d.c_index >= filterMinRef.current &&
-          d.c_index <= filterMaxRef.current
-        ) {
-          mouseOverPhotoSortingMonth(d, i, this);
-        }
-      })
-      .on("mouseout", function (d, i) {
-        mouseOutPhotoSortingMonth(d, i, this);
-      })
       .transition()
       .duration(2000)
       // .style("opacity", 1)
@@ -374,6 +488,21 @@ function GraphsBoard(props) {
       .sort(function (a, b) {
         // Sorting the photos by day
         return d3.ascending(a.day_number, b.day_number);
+      })
+      // We need to append the 'mouseover' and 'mouseout' event again since the previous
+      //  one was for the other sorting methods.
+      .on("mouseover", function (d, i) {
+        // We show the infobox only for the photos which are not hidden (which
+        //  fall within the filtering range).
+        if (
+          d.c_index >= filterMinRef.current &&
+          d.c_index <= filterMaxRef.current
+        ) {
+          mouseOverPhotoSortingMonth(d, i, this);
+        }
+      })
+      .on("mouseout", function (d, i) {
+        mouseOutPhotoSortingMonth(d, i, this);
       })
       .transition()
       .duration(2000)
@@ -552,21 +681,6 @@ function GraphsBoard(props) {
         // Sorting the photos by day
         return d3.ascending(a.day_number, b.day_number);
       })
-      // We need to append the 'mouseover' and 'mouseout' event again since the previous
-      //  one was for the other sorting methods.
-      .on("mouseover", function (d, i) {
-        // We show the infobox only for the photos which are not hidden (which
-        //  fall within the filtering range).
-        if (
-          d.c_index >= filterMinRef.current &&
-          d.c_index <= filterMaxRef.current
-        ) {
-          mouseOverPhotoSortingDate(d, i, this);
-        }
-      })
-      .on("mouseout", function (d, i) {
-        mouseOutPhotoSortingDate(d, i, this);
-      })
       .transition()
       .duration(2000)
       .attr("width", recs.current.width)
@@ -601,6 +715,21 @@ function GraphsBoard(props) {
       .sort(function (a, b) {
         // Sorting the photos by day
         return d3.ascending(a.day_number, b.day_number);
+      })
+      // We need to append the 'mouseover' and 'mouseout' event again since the previous
+      //  one was for the other sorting methods.
+      .on("mouseover", function (d, i) {
+        // We show the infobox only for the photos which are not hidden (which
+        //  fall within the filtering range).
+        if (
+          d.c_index >= filterMinRef.current &&
+          d.c_index <= filterMaxRef.current
+        ) {
+          mouseOverPhotoSortingDate(d, i, this);
+        }
+      })
+      .on("mouseout", function (d, i) {
+        mouseOutPhotoSortingDate(d, i, this);
       })
       .transition()
       .duration(2000)
@@ -664,21 +793,6 @@ function GraphsBoard(props) {
       .sort(function (a, b) {
         return d3.ascending(a.c_index, b.c_index);
       })
-      // We need to append the 'mouseover' and 'mouseout' event again since the previous
-      //  one was for the other sorting methods.
-      .on("mouseover", function (d, i) {
-        // We show the infobox only for the photos which are not hidden (which
-        //  fall within the filtering range).
-        if (
-          d.c_index >= filterMinRef.current &&
-          d.c_index <= filterMaxRef.current
-        ) {
-          mouseOverPhotoSortingClouP(d, i, this);
-        }
-      })
-      .on("mouseout", function (d, i) {
-        mouseOutPhotoSortingClouP(d, i, this);
-      })
       .transition()
       .duration(2000)
       .attr("width", recs.current.width)
@@ -712,6 +826,21 @@ function GraphsBoard(props) {
       .sort(function (a, b) {
         return d3.ascending(a.c_index, b.c_index);
       })
+      // We need to append the 'mouseover' and 'mouseout' event again since the previous
+      //  one was for the other sorting methods.
+      .on("mouseover", function (d, i) {
+        // We show the infobox only for the photos which are not hidden (which
+        //  fall within the filtering range).
+        if (
+          d.c_index >= filterMinRef.current &&
+          d.c_index <= filterMaxRef.current
+        ) {
+          mouseOverPhotoSortingClouP(d, i, this);
+        }
+      })
+      .on("mouseout", function (d, i) {
+        mouseOutPhotoSortingClouP(d, i, this);
+      })
       .transition()
       .duration(2000)
       .attr("width", recs.current.width)
@@ -741,6 +870,268 @@ function GraphsBoard(props) {
   }
   // =================================================================
 
+  // =================================================================
+  // PLAYING MUSIC STUFF
+  // Calculates all graphs dimentions for the Sorting: Music
+  function calculateGraphsSortMusic() {
+    // Get the height of the svg that contains the SVG
+    let svgHeight = svgGraphsBoard.current.getBoundingClientRect().height - 1;
+
+    // The width of the month labels (Jan, Feb, etc...)
+    var weekLabelWidth = null;
+    var weekLabelHeight = null;
+    d3.select(".weeksLabel")
+      .filter(function (d, i) {
+        return i === 0;
+      })
+      .style("width", function (d) {
+        weekLabelWidth = this.getBoundingClientRect().width;
+        weekLabelHeight = this.getBoundingClientRect().height;
+      });
+
+    // Distance between the grid and the weeksLabels
+    let gridMarginLeft = 30;
+
+    // The gap between the week blocks
+    let weekblockVerticalGap = weekLabelHeight + 10;
+
+    let gridHeight = svgHeight - 2 * weekblockVerticalGap; // 2 * weekblockVerticalGap -> top and bottom padding.
+
+    // The expression below comes from this equation: 3*(7*recs.current.height) + 2*weekblockVerticalGap = gridHeight
+    recs.current.height = (gridHeight - 2 * weekblockVerticalGap) / 21;
+    recs.current.width = (1 / 0.75) * recs.current.height;
+
+    let weekBlockHeight =
+      7 * recs.current.height + 6 * gapBetweenPhotos.current;
+
+    // Calculating the weekLabelMarginLeft:
+    let svgWidth = svgGraphsBoard.current.getBoundingClientRect().width - 1;
+    let gridWidth = 20 * recs.current.width + 19 * gapBetweenPhotos.current;
+    // The expression below comes from:
+    //   svgWidth = 2margins + weekLabelWidth + gridMarginLeft + gridWidth
+    let weekLabelMarginLeft =
+      (svgWidth - weekLabelWidth - gridMarginLeft - gridWidth) / 2;
+
+    // We return these values so we know where to draw the grid and weeksLabels
+    return {
+      gridMarginLeft: gridMarginLeft + weekLabelMarginLeft + weekLabelWidth,
+      weekblockVerticalGap: weekblockVerticalGap,
+      weekBlockHeight: weekBlockHeight,
+      weekLabelMarginLeft: weekLabelMarginLeft,
+    };
+  }
+
+  function sortMusic() {
+    // alert("We are going to play music now!");
+    setSomeAnimationHappeningNow(true);
+
+    var distances = calculateGraphsSortMusic();
+
+    // Repositioning all photos
+    d3Obj
+      .selectAll(".skyPhoto")
+      // Sorting by day_number
+      .sort(function (a, b) {
+        return d3.ascending(a.day_number, b.day_number);
+      })
+      .transition()
+      .duration(2000)
+      .attr("width", recs.current.width)
+      .attr("height", recs.current.height)
+      .attr("x", function (d, i) {
+        // If lineBlock == 0  ->  this photo is on the first week block line.
+        // If lineBlock == 1  ->  this photo is on the second week block line.
+        // If lineBlock == 2  ->  this photo is on the third week block line.
+        var lineBlock = parseInt(i / (7 * 20));
+        var marginLeft = distances.gridMarginLeft;
+
+        // First line block
+        if (lineBlock === 0) {
+          return (
+            marginLeft +
+            parseInt(i / 7) * (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Second line block
+        else if (lineBlock === 1) {
+          return (
+            marginLeft +
+            parseInt((i - 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Third line block
+        else if (lineBlock === 2) {
+          return (
+            marginLeft +
+            parseInt((i - 2 * 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+      })
+      .attr("y", function (d, i) {
+        return (
+          // distances.weekblockVerticalGap / 2 + // Padding top of the SVG
+          distances.weekblockVerticalGap + // Padding top of the SVG
+          (i % 7) * recs.current.height +
+          /* The line (week) block. 20 -> n of columns
+                                    7  -> n of lines  */
+          parseInt(i / (7 * 20)) *
+            (distances.weekBlockHeight + distances.weekblockVerticalGap)
+        );
+      })
+      .call(endAll, function () {
+        // This will be executed when this animation is over.
+        // The animation is now over
+        setSomeAnimationHappeningNow(false);
+        // Let's filter the grid just in case the user
+        //  changed the filtering values while the animation
+        //  was happening.
+        applyFiltering();
+
+        // Let's add this year to the yearsPlaying array.
+        props.addYearFromPlayingList(props.year);
+
+        // Let's start playing the audio:
+        // If we are not already playing something.
+        if (Tone.Transport.state === "stopped") {
+          // We need to position the Tone.Transport to 0
+          Tone.Transport.position = 0;
+
+          // And start it.
+          // Tone.Transport.start(0);
+          Tone.Transport.start();
+
+          // Now let's play our sequencer.
+          // sequencer.start(0);
+          sequencer.start(Tone.Transport.progress);
+        }
+        // If we are already playing something
+        else if (Tone.Transport.state === "started") {
+          sequencer.start();
+        }
+
+        setIsPlayingSound(true);
+      });
+
+    // Repositioning border rects
+    d3Obj
+      .selectAll(".photoRect")
+      // Sorting by day_number
+      .sort(function (a, b) {
+        return d3.ascending(a.day_number, b.day_number);
+      })
+      // We need to append the 'mouseover' and 'mouseout' event again since the previous
+      //  one was for the other sorting methods.
+      .on("mouseover", function (d, i) {
+        // We show the infobox only for the photos which are not hidden (which
+        //  fall within the filtering range).
+        if (
+          d.c_index >= filterMinRef.current &&
+          d.c_index <= filterMaxRef.current
+        ) {
+          mouseOverPhotoSortingMusic(d, i, this);
+        }
+      })
+      .on("mouseout", function (d, i) {
+        mouseOutPhotoSortingMusic(d, i, this);
+      })
+      .transition()
+      .duration(2000)
+      .attr("width", recs.current.width)
+      .attr("height", recs.current.height)
+      .attr("x", function (d, i) {
+        // If lineBlock == 0  ->  this rect is on the first week block line.
+        // If lineBlock == 1  ->  this rect is on the second week block line.
+        // If lineBlock == 2  ->  this rect is on the third week block line.
+        var lineBlock = parseInt(i / (7 * 20));
+        var marginLeft = distances.gridMarginLeft;
+
+        // First line block
+        if (lineBlock === 0) {
+          return (
+            marginLeft +
+            parseInt(i / 7) * (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Second line block
+        else if (lineBlock === 1) {
+          return (
+            marginLeft +
+            parseInt((i - 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Third line block
+        else if (lineBlock === 2) {
+          return (
+            marginLeft +
+            parseInt((i - 2 * 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+      })
+      .attr("y", function (d, i) {
+        return (
+          // distances.weekblockVerticalGap / 2 + // Padding top of the SVG
+          distances.weekblockVerticalGap + // Padding top of the SVG
+          (i % 7) * recs.current.height +
+          /* The line (week) block. 20 -> n of columns
+                                    7  -> n of lines  */
+          parseInt(i / (7 * 20)) *
+            (distances.weekBlockHeight + distances.weekblockVerticalGap)
+        );
+      });
+
+    // Positioning weeks labels
+    d3Obj
+      .selectAll(".weeksLabel")
+      .transition()
+      .duration(2000)
+      // .style("opacity", 1)
+      .attr("opacity", "1")
+      .attr("x", function (d, i) {
+        return distances.weekLabelMarginLeft;
+      })
+      .attr("y", function (d, i) {
+        return (
+          distances.weekblockVerticalGap +
+          i * (distances.weekBlockHeight + distances.weekblockVerticalGap) -
+          7
+        );
+      });
+
+    // Positioning week numbers
+    d3Obj
+      .selectAll(".weekNumber")
+      .transition()
+      .duration(2000)
+      // .style("opacity", 1)
+      .attr("opacity", "1")
+      .attr("x", function (d, i) {
+        return (
+          distances.gridMarginLeft +
+          (i % 20) * (recs.current.width + gapBetweenPhotos.current) +
+          recs.current.width / 2
+        );
+      })
+      .attr("y", function (d, i) {
+        // If lineBlock == 0  ->  this number is on the first week block line.
+        // If lineBlock == 1  ->  this number is on the second week block line.
+        // If lineBlock == 2  ->  this number is on the third week block line.
+        var lineBlock = parseInt(i / 20);
+
+        return (
+          distances.weekblockVerticalGap +
+          lineBlock *
+            (distances.weekBlockHeight + distances.weekblockVerticalGap) -
+          7
+        );
+      });
+
+    showFilteringValues();
+  }
+  // =================================================================
   function applyFiltering() {
     if (d3Obj && !someAnimationHappeningNowRef.current) {
       // Hiding the photos that don't fall in the filtering range.
@@ -748,17 +1139,28 @@ function GraphsBoard(props) {
         .selectAll(".skyPhoto")
         .transition()
         .duration(800)
-        .style("opacity", function (d) {
+        .attr("opacity", function (d) {
           // if (d.c_index >= props.filterMin && d.c_index <= props.filterMax) {
           if (
             d.c_index >= filterMinRef.current &&
             d.c_index <= filterMaxRef.current
           ) {
-            return 1;
+            return "1";
           } else {
-            return 0;
+            return "0";
           }
         });
+      // .style("opacity", function (d) {
+      //   // if (d.c_index >= props.filterMin && d.c_index <= props.filterMax) {
+      //   if (
+      //     d.c_index >= filterMinRef.current &&
+      //     d.c_index <= filterMaxRef.current
+      //   ) {
+      //     return 1;
+      //   } else {
+      //     return 0;
+      //   }
+      // });
 
       // Showing the rect border of the photos that were hidden.
       d3Obj
@@ -821,7 +1223,24 @@ function GraphsBoard(props) {
         .selectAll(".month_NDaysWithinRange")
         .transition()
         .duration(2000)
-        .style("opacity", 0);
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide the weekLabel
+      d3Obj
+        .selectAll(".weeksLabel")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide week numbers
+      d3Obj
+        .selectAll(".weekNumber")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
 
       // 'numberOfDaysShowing' is an array with the number of days withing the range
       //   for each month. 'numberDaysThatFallsTheRange' is the sum of all days.
@@ -842,12 +1261,18 @@ function GraphsBoard(props) {
         })
         .transition()
         .duration(2000)
-        .style("opacity", function () {
+        .attr("opacity", function () {
           if (props.filterMin === 0 && props.filterMax === 100) {
-            return 0;
+            return "0";
           }
-          return 1;
+          return "1";
         })
+        // .style("opacity", function () {
+        //   if (props.filterMin === 0 && props.filterMax === 100) {
+        //     return 0;
+        //   }
+        //   return 1;
+        // })
         .attr("x", function (d, i) {
           // This is the margin to centralize the grid.
           let margin =
@@ -868,7 +1293,24 @@ function GraphsBoard(props) {
         .selectAll(".month_NDaysWithinRange")
         .transition()
         .duration(2000)
-        .style("opacity", 0);
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide the weekLabel
+      d3Obj
+        .selectAll(".weeksLabel")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide week numbers
+      d3Obj
+        .selectAll(".weekNumber")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
 
       // 'numberOfDaysShowing' is an array with the number of days withing the range
       //   for each month. 'numberDaysThatFallsTheRange' is the sum of all days.
@@ -890,12 +1332,18 @@ function GraphsBoard(props) {
         })
         .transition()
         .duration(2000)
-        .style("opacity", function () {
+        .attr("opacity", function () {
           if (props.filterMin === 0 && props.filterMax === 100) {
-            return 0;
+            return "0";
           }
-          return 1;
+          return "1";
         })
+        // .style("opacity", function () {
+        //   if (props.filterMin === 0 && props.filterMax === 100) {
+        //     return 0;
+        //   }
+        //   return 1;
+        // })
         .attr("x", function (d, i) {
           return svgGraphsBoard.current.getBoundingClientRect().width;
         })
@@ -912,6 +1360,22 @@ function GraphsBoard(props) {
         .duration(2000)
         .style("opacity", 0);
 
+      // Hide the weekLabel
+      d3Obj
+        .selectAll(".weeksLabel")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide week numbers
+      d3Obj
+        .selectAll(".weekNumber")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
       // Showing the number of days that fall within the range.
       d3Obj
         .selectAll(".month_NDaysWithinRange")
@@ -920,12 +1384,18 @@ function GraphsBoard(props) {
         })
         .transition()
         .duration(2000)
-        .style("opacity", function () {
+        .attr("opacity", function () {
           if (props.filterMin === 0 && props.filterMax === 100) {
-            return 0;
+            return "0";
           }
-          return 1;
+          return "1";
         })
+        // .style("opacity", function () {
+        //   if (props.filterMin === 0 && props.filterMax === 100) {
+        //     return 0;
+        //   }
+        //   return 1;
+        // })
         .attr("x", function (d, i) {
           // d -> month name 'Jan', 'Fev', 'Mar' etc...
           // i -> month number (0-11)
@@ -949,6 +1419,32 @@ function GraphsBoard(props) {
           }
           return getYPositionOnMonthConfig(i + 1, sumOfDaysPreviousMonth) - 10;
         });
+    }
+    // Sorting -> music
+    else if (props.selectedMethod === 0) {
+      // Hide the % of the year that falls within the filtering range.
+      d3Obj
+        .select(".percentage_year_withing_range")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
+
+      // Hide monthLabels
+      d3Obj
+        .selectAll(".monthLabel")
+        .transition()
+        .duration(2000)
+        // .attr("x", -100);
+        .attr("fill", "rgb(255, 255, 255)");
+
+      // Hide the number of days for each month that fall within the range.
+      d3Obj
+        .selectAll(".month_NDaysWithinRange")
+        .transition()
+        .duration(2000)
+        .attr("opacity", "0");
+      // .style("opacity", 0);
     }
   }
 
@@ -1159,7 +1655,8 @@ function GraphsBoard(props) {
           }
           return getYPositionOnMonthConfig(i + 1, sumOfDaysPreviousMonth) - 10;
         })
-        .style("opacity", 0)
+        .attr("opacity", "0")
+        // .style("opacity", 0)
         .attr("font-family", "Poppins_light")
         .attr("fill", "rgb(108, 108, 108")
         .on("mouseover", function (d, i) {
@@ -1220,7 +1717,8 @@ function GraphsBoard(props) {
         .attr("y", function (d, i) {
           return marginTopOnDateConfig - 10;
         })
-        .style("opacity", 0)
+        .attr("opacity", "0")
+        // .style("opacity", 0)
         .attr("font-family", "Poppins_light")
         .attr("fill", "rgb(108, 108, 108")
         .on("mouseover", function (d, i) {
@@ -1269,6 +1767,66 @@ function GraphsBoard(props) {
           // Hide infobox
           skyphotoInfobox.current.style["visibility"] = "hidden";
           skyphotoInfobox.current.style["opacity"] = 0;
+        });
+
+      // We'll use 'distances' for positioning 'Week' and
+      //  week numbers for the method:sort.
+      var distances = calculateGraphsSortMusic();
+      // Adding weeks labels
+      d3Obj
+        .selectAll(".weeksLabel")
+        .data([0])
+        .enter()
+        .append("text")
+        .attr("class", "weeksLabel")
+        .text("Week:")
+        .attr("font-family", "Poppins_light")
+        .attr("fill", "rgb(170, 170, 170")
+        .attr("opacity", "0")
+        // .style("opacity", 0)
+        .attr("x", function (d, i) {
+          return 45;
+        })
+        .attr("y", function (d, i) {
+          return 22.5;
+        });
+
+      // Adding weeks numbers
+      d3Obj
+        .selectAll(".weekNumber")
+        .data(Array.from(Array(53).keys()))
+        .enter()
+        .append("text")
+        .attr("class", function (d, i) {
+          return "weekNumber" + " weekNumber-" + (i + 1);
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d, i) {
+          return i + 1;
+        })
+        .attr("font-family", "Poppins_light")
+        .attr("fill", "rgb(170, 170, 170")
+        .attr("opacity", "0")
+        // .style("opacity", 0)
+        .attr("x", function (d, i) {
+          return (
+            distances.gridMarginLeft +
+            (i % 20) * (recs.current.width + gapBetweenPhotos.current) +
+            recs.current.width / 2
+          );
+        })
+        .attr("y", function (d, i) {
+          // If lineBlock == 0  ->  this number is on the first week block line.
+          // If lineBlock == 1  ->  this number is on the second week block line.
+          // If lineBlock == 2  ->  this number is on the third week block line.
+          var lineBlock = parseInt(i / 20);
+
+          return (
+            distances.weekblockVerticalGap +
+            lineBlock *
+              (distances.weekBlockHeight + distances.weekblockVerticalGap) -
+            7
+          );
         });
 
       // Adding the photos.
@@ -1337,7 +1895,12 @@ function GraphsBoard(props) {
           // }
           // return skyImages["s" + Math.floor(d.c_index / 10)];
         })
-        .attr("class", "skyPhoto")
+        // .attr("class", "skyPhoto")
+        .attr("class", function (d, i) {
+          // We add the number of the column so we can manipulate
+          //  the elements when playing the Synth.
+          return "skyPhoto" + " column-" + parseInt(i / 7);
+        })
         // .style("opacity", 0)
         .attr("width", recs.current.width)
         .attr("height", recs.current.height)
@@ -1354,7 +1917,36 @@ function GraphsBoard(props) {
         })
         .attr("dayNumber", function (d) {
           return d.day_number;
+        });
+
+      // Adding one rectangle for each photo so we can add border to them.
+      d3Obj
+        .selectAll("rect")
+        .data(props.data)
+        .enter()
+        .append("rect")
+        .attr("class", "photoRect")
+        // .attr("fill", "none")
+        .attr("fill", "transparent")
+        .attr("width", 0)
+        .attr("height", 0)
+        .attr("x", function (d, i) {
+          // return -50;
+          return getXPositionOnMonthConfig(d.month, i);
         })
+        .attr("y", function (d, i) {
+          // return -50;
+          return getYPositionOnMonthConfig(d.month, i);
+        })
+        .attr("c_index", function (d, i) {
+          return d.c_index;
+        })
+        .attr("dayNumber", function (d) {
+          return d.day_number;
+        })
+        .style("stroke-opacity", 0) // set the stroke opacity
+        .style("stroke", "rgb(108, 108, 108") // set the line colour
+        .style("stroke-width", 0.3) // set the stroke width;
         .on("mouseover", function (d, i) {
           // We show the infobox only for the photos which are not hidden (which
           //  fall within the filtering range). We are using filterMinRef instead of
@@ -1394,8 +1986,12 @@ function GraphsBoard(props) {
           }
         })
         .on("click", function (d, i) {
+          var photo = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+            return _d.day_number === d.day_number;
+          })[0][0];
+
           // Setting the imageURL to be zoomed/displayed
-          setZoomedPhotoURL(this.href.baseVal);
+          setZoomedPhotoURL(photo.href.baseVal);
 
           // The rect should teleport straight to the top of the photo to be zoomed, so
           //  'left' and 'top' should not be a transition when first moving to the top
@@ -1410,12 +2006,12 @@ function GraphsBoard(props) {
 
           // Positioning zoomPhotoDiv on top of skyPhoto that was clicked.
           zoomPhotoDiv.current.style["left"] =
-            this.getBoundingClientRect().left +
+            photo.getBoundingClientRect().left +
             (0.88 * recs.current.width - recs.current.width) / 2 +
             window.scrollX +
             "px";
           zoomPhotoDiv.current.style["top"] =
-            this.getBoundingClientRect().top +
+            photo.getBoundingClientRect().top +
             (0.88 * recs.current.height - recs.current.height) / 2 +
             window.scrollY +
             "px";
@@ -1427,6 +2023,16 @@ function GraphsBoard(props) {
           // Setting its dimentions to fit the <image>
           zoomPhotoDiv.current.style["width"] = recs.current.width + "px";
           zoomPhotoDiv.current.style["height"] = recs.current.height + "px";
+
+          // If the browser has large width but small height
+          if (window.innerWidth / window.innerHeight > 4 / 3) {
+            console.log("Oi");
+            zoomedImage.current.style["height"] = "90%";
+            zoomedImage.current.style["width"] = "auto";
+          } else {
+            zoomedImage.current.style["width"] = "90%";
+            zoomedImage.current.style["height"] = "auto";
+          }
 
           // Growing/Zooming photo:
           setTimeout(function () {
@@ -1450,51 +2056,37 @@ function GraphsBoard(props) {
           }, 50);
         });
 
-      // Adding one rectangle for each photo so we can add border to them.
-      d3Obj
-        .selectAll("rect")
-        .data(props.data)
-        .enter()
-        .append("rect")
-        .attr("class", "photoRect")
-        .attr("fill", "none")
-        .attr("width", 0)
-        .attr("height", 0)
-        .attr("x", function (d, i) {
-          // return -50;
-          return getXPositionOnMonthConfig(d.month, i);
-        })
-        .attr("y", function (d, i) {
-          // return -50;
-          return getYPositionOnMonthConfig(d.month, i);
-        })
-        .attr("c_index", function (d, i) {
-          return d.c_index;
-        })
-        .attr("dayNumber", function (d) {
-          return d.day_number;
-        })
-        .style("stroke-opacity", 0) // set the stroke opacity
-        .style("stroke", "rgb(108, 108, 108") // set the line colour
-        .style("stroke-width", 0.3); // set the stroke width;
-
       // By calling updateGraphs() here we make sure that we call the animation
       //  to sort the function:
       //      .call(endAll, function () {
       //      // This will be executed when this animation is over.
       //      // The animation is now over
       //      setSomeAnimationHappeningNow(false);
-      //  so we can setthe someAnimationHappeningNow back to false and therefore
+      //  so we can set the someAnimationHappeningNow back to false and therefore
       //  we can filter. Without this, we can't filter if that's our first action
       //  on the website. (if we try to filter before we click on any sorting option)
       updateGraphs();
+
+      setIsSvgPopulated(true);
     }
   }
 
   // MouseOver and MouseOut functions ======================================
   // =======================================================================
-  function mouseOverPhotoSortingMonth(d, i, photoElement) {
-    d3.select(photoElement).style("cursor", "pointer");
+  // MONTH
+  function mouseOverPhotoSortingMonth(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Playing sound
+    playDaySample(photoElement);
+
+    // Cursor
+    // d3.select(photoElement).style("cursor", "pointer");
+    d3.select(rectElement).style("cursor", "pointer");
 
     let newWidth = 0.88 * recs.current.width;
     let newHeight = 0.88 * recs.current.height;
@@ -1514,14 +2106,12 @@ function GraphsBoard(props) {
           (newHeight - recs.current.height) / 2
         );
       });
-
     // Infobox: Changing the day and %cloud
     // How many days have we plotted already until the previous month?
     let sumOfDaysPreviousMonth = 0;
     for (let m = 1; m < d.month; m++) {
       sumOfDaysPreviousMonth += monthsLength.current[m];
     }
-
     // Defining infobox info message
     //   remove previous info
     setGenericInfoboxMessage("");
@@ -1530,7 +2120,6 @@ function GraphsBoard(props) {
       d.day_number - sumOfDaysPreviousMonth + " " + monthFullNames[d.month - 1]
     );
     setInfoboxPCloud(d.c_index + "% cloud");
-
     // Position and showing infobox
     let infoBoxPosX =
       photoElement.getBoundingClientRect().x +
@@ -1544,12 +2133,18 @@ function GraphsBoard(props) {
       window.scrollY;
     skyphotoInfobox.current.style["left"] = infoBoxPosX + "px";
     skyphotoInfobox.current.style["top"] = infoBoxPosY + "px";
-
     // Show infobox
     skyphotoInfobox.current.style["visibility"] = "visible";
     skyphotoInfobox.current.style["opacity"] = 1;
   }
-  function mouseOutPhotoSortingMonth(d, i, photoElement) {
+  function mouseOutPhotoSortingMonth(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Cursor
     d3.select(photoElement).style("cursor", "default");
 
     d3.select(photoElement)
@@ -1567,8 +2162,19 @@ function GraphsBoard(props) {
     skyphotoInfobox.current.style["opacity"] = 0;
   }
 
-  function mouseOverPhotoSortingDate(d, i, photoElement) {
-    d3.select(photoElement).style("cursor", "pointer");
+  // DATE
+  function mouseOverPhotoSortingDate(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Playing sound
+    playDaySample(photoElement);
+
+    // Cursor
+    d3.select(rectElement).style("cursor", "pointer");
 
     var distances = calculateGraphsSortDate();
 
@@ -1623,11 +2229,18 @@ function GraphsBoard(props) {
     skyphotoInfobox.current.style["visibility"] = "visible";
     skyphotoInfobox.current.style["opacity"] = 1;
   }
-  function mouseOutPhotoSortingDate(d, i, photoElement) {
+  function mouseOutPhotoSortingDate(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Cursor
     d3.select(photoElement).style("cursor", "default");
 
     // Let's calculate the distances so we can use it
-    //  to position the infobox properly.
+    //  to position the photos properly.
     var distances = calculateGraphsSortDate();
 
     d3.select(photoElement)
@@ -1651,8 +2264,19 @@ function GraphsBoard(props) {
     skyphotoInfobox.current.style["opacity"] = 0;
   }
 
-  function mouseOverPhotoSortingClouP(d, i, photoElement) {
-    d3.select(photoElement).style("cursor", "pointer");
+  // CLOUD %
+  function mouseOverPhotoSortingClouP(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Playing sound
+    playDaySample(photoElement);
+
+    // Cursor
+    d3.select(rectElement).style("cursor", "pointer");
 
     // This is the margin to centralize the grid.
     let margin =
@@ -1712,8 +2336,15 @@ function GraphsBoard(props) {
     skyphotoInfobox.current.style["visibility"] = "visible";
     skyphotoInfobox.current.style["opacity"] = 1;
   }
-  function mouseOutPhotoSortingClouP(d, i, photoElement) {
-    d3.select(photoElement).style("cursor", "default");
+  function mouseOutPhotoSortingClouP(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Cursor
+    d3.select(rectElement).style("cursor", "default");
 
     // This is the margin to centralize the grid.
     let margin =
@@ -1741,8 +2372,186 @@ function GraphsBoard(props) {
     skyphotoInfobox.current.style["opacity"] = 0;
   }
 
+  // MUSIC
+  function mouseOverPhotoSortingMusic(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Playing sound
+    playDaySample(photoElement);
+
+    // Cursor
+    d3.select(rectElement).style("cursor", "pointer");
+
+    var distances = calculateGraphsSortMusic();
+
+    let newWidth = 0.88 * recs.current.width;
+    let newHeight = 0.88 * recs.current.height;
+    d3.select(photoElement)
+      .attr("width", newWidth)
+      .attr("height", newHeight)
+      .attr("x", function (_d, _i) {
+        // If lineBlock == 0  ->  this photo is on the first week block line.
+        // If lineBlock == 1  ->  this photo is on the second week block line.
+        // If lineBlock == 2  ->  this photo is on the third week block line.
+        var lineBlock = parseInt(i / (7 * 20));
+        var marginLeft = distances.gridMarginLeft;
+
+        // First line block
+        if (lineBlock === 0) {
+          return (
+            marginLeft +
+            parseInt(i / 7) * (recs.current.width + gapBetweenPhotos.current) -
+            (newWidth - recs.current.width) / 2
+          );
+        }
+        // Second line block
+        else if (lineBlock === 1) {
+          return (
+            marginLeft +
+            parseInt((i - 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current) -
+            (newWidth - recs.current.width) / 2
+          );
+        }
+        // Third line block
+        else if (lineBlock === 2) {
+          return (
+            marginLeft +
+            parseInt((i - 2 * 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current) -
+            (newWidth - recs.current.width) / 2
+          );
+        }
+      })
+      .attr("y", function () {
+        return (
+          // distances.weekblockVerticalGap / 2 + // Padding top of the SVG
+          distances.weekblockVerticalGap + // Padding top of the SVG
+          (i % 7) * recs.current.height +
+          /* The line (week) block. 20 -> n of columns
+                                    7  -> n of lines  */
+          parseInt(i / (7 * 20)) *
+            (distances.weekBlockHeight + distances.weekblockVerticalGap) -
+          (newHeight - recs.current.height) / 2
+        );
+      });
+
+    // Infobox: Changing the day and %cloud
+    // How many days have we plotted already until the previous month?
+    let sumOfDaysPreviousMonth = 0;
+    for (let m = 1; m < d.month; m++) {
+      sumOfDaysPreviousMonth += monthsLength.current[m];
+    }
+    // Defining infobox info message
+    //   remove previous info
+    setGenericInfoboxMessage("");
+    //   set new message
+    setInfoboxDay(
+      d.day_number - sumOfDaysPreviousMonth + " " + monthFullNames[d.month - 1]
+    );
+    setInfoboxPCloud(d.c_index + "% cloud");
+    // Position and showing infobox
+    let infoBoxPosX =
+      photoElement.getBoundingClientRect().x +
+      recs.current.width -
+      10 +
+      window.scrollX;
+    let infoBoxPosY =
+      photoElement.getBoundingClientRect().y +
+      recs.current.height +
+      4 +
+      window.scrollY;
+    skyphotoInfobox.current.style["left"] = infoBoxPosX + "px";
+    skyphotoInfobox.current.style["top"] = infoBoxPosY + "px";
+    // Show infobox
+    skyphotoInfobox.current.style["visibility"] = "visible";
+    skyphotoInfobox.current.style["opacity"] = 1;
+  }
+  function mouseOutPhotoSortingMusic(d, i, rectElement) {
+    // A <rect> that triggers this function. Let's get the <image> 'associated'
+    //  this <rect>.
+    var photoElement = d3Obj.selectAll(".skyPhoto").filter(function (_d, _i) {
+      return _d.day_number === d.day_number;
+    })[0][0];
+
+    // Cursor
+    d3.select(rectElement).style("cursor", "default");
+
+    var distances = calculateGraphsSortMusic();
+
+    d3.select(photoElement)
+      .attr("width", recs.current.width)
+      .attr("height", recs.current.height)
+      .attr("x", function (_d, _i) {
+        // If lineBlock == 0  ->  this photo is on the first week block line.
+        // If lineBlock == 1  ->  this photo is on the second week block line.
+        // If lineBlock == 2  ->  this photo is on the third week block line.
+        var lineBlock = parseInt(i / (7 * 20));
+        var marginLeft = distances.gridMarginLeft;
+
+        // First line block
+        if (lineBlock === 0) {
+          return (
+            marginLeft +
+            parseInt(i / 7) * (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Second line block
+        else if (lineBlock === 1) {
+          return (
+            marginLeft +
+            parseInt((i - 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+        // Third line block
+        else if (lineBlock === 2) {
+          return (
+            marginLeft +
+            parseInt((i - 2 * 7 * 20) / 7) *
+              (recs.current.width + gapBetweenPhotos.current)
+          );
+        }
+      })
+      .attr("y", function () {
+        return (
+          // distances.weekblockVerticalGap / 2 + // Padding top of the SVG
+          distances.weekblockVerticalGap + // Padding top of the SVG
+          (i % 7) * recs.current.height +
+          /* The line (week) block. 20 -> n of columns
+                                  7  -> n of lines  */
+          parseInt(i / (7 * 20)) *
+            (distances.weekBlockHeight + distances.weekblockVerticalGap)
+        );
+      });
+
+    // Hide skyphoto Infobox
+    skyphotoInfobox.current.style["visibility"] = "hidden";
+    skyphotoInfobox.current.style["opacity"] = 0;
+  }
   // =======================================================================
   // =======================================================================
+
+  function playDaySample(photoElement) {
+    const c_index = photoElement.getAttribute("c_index");
+
+    // console.log(
+    //   "state: " + players["p" + parseInt((13 * c_index) / 100)].state
+    // );
+
+    if (players["p" + parseInt((13 * c_index) / 100)].state === "started") {
+      // console.log("Yes");
+      // players["p" + parseInt((13 * c_index) / 100)].stop();
+      players["p" + parseInt((13 * c_index) / 100)].restart();
+    } else {
+      // Play the sample
+      players["p" + parseInt((13 * c_index) / 100)].start();
+    }
+  }
 
   // This function will help you detect when an animation is
   //  over so you can perform another animation after that.
@@ -1760,17 +2569,62 @@ function GraphsBoard(props) {
     if (d3Obj) {
       // Sorting -> cloud%
       if (props.selectedMethod === 1) {
+        // Maybe the previous method was sorting:music and therefore
+        //  we are playing the music. In that case let's remove it.
+        props.removeYearFromPlayingList(props.year);
+
+        // If we are playing sound
+        if (isPlayingSound) {
+          // Let's stop the sequencer.
+          stopSequencer();
+        }
+
         sortCloudP();
       }
       // Sorting -> date
       else if (props.selectedMethod === 2) {
+        // Maybe the previous method was sorting:music and therefore
+        //  we are playing the music. In that case let's remove it.
+        props.removeYearFromPlayingList(props.year);
+
+        // If we are playing sound
+        if (isPlayingSound) {
+          // Let's stop the sequencer.
+          stopSequencer();
+        }
+
         sortDate();
       }
       // Sorting -> month
       else if (props.selectedMethod === 3) {
+        // Maybe the previous method was sorting:music and therefore
+        //  we are playing the music. In that case let's remove it.
+        props.removeYearFromPlayingList(props.year);
+
+        // If we are playing sound
+        if (isPlayingSound) {
+          // Let's stop the sequencer.
+          stopSequencer();
+        }
+
         sortMonth();
       }
+      // Sorting -> music
+      else if (props.selectedMethod === 0) {
+        sortMusic();
+      }
     }
+  }
+
+  function stopSequencer() {
+    // Let's stop our sequencer.
+    sequencer.stop();
+
+    // De-highlight all column number
+    d3Obj.selectAll(".weekNumber").attr("fill", "rgb(170, 170, 170");
+
+    // Let's register that we are not playing anymore
+    setIsPlayingSound(false);
   }
 
   function setMonthsLength() {
@@ -1862,7 +2716,13 @@ function GraphsBoard(props) {
           onClick={handleCloseZommedPhoto}
         >
           <p onClick={handleCloseZommedPhoto}>x</p>
-          <img className="zommed_image" src={zoomedPhotoURL} alt=""></img>
+
+          <img
+            className="zommed_image"
+            src={zoomedPhotoURL}
+            alt=""
+            ref={zoomedImage}
+          ></img>
         </div>
       </div>
     </Fragment>
