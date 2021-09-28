@@ -242,7 +242,7 @@ function GraphsBoard(props) {
     // console.log(" -- graphsBoard - useEffect 2: populating graphs");
     // The d3Obj is now all set. Time to populate it with data.
     populateSvg();
-  }, [d3Obj, monthNames, photosInfo, photosInfoCopy]);
+  }, [d3Obj, monthNames, photosInfo, photosInfoCopy, players]);
 
   // SYNTH / SONG
   useEffect(() => {
@@ -2542,15 +2542,16 @@ function GraphsBoard(props) {
     // console.log(
     //   "state: " + players["p" + parseInt((13 * c_index) / 100)].state
     // );
+    players["p" + parseInt((13 * c_index) / 100)].start();
 
-    if (players["p" + parseInt((13 * c_index) / 100)].state === "started") {
-      // console.log("Yes");
-      // players["p" + parseInt((13 * c_index) / 100)].stop();
-      players["p" + parseInt((13 * c_index) / 100)].restart();
-    } else {
-      // Play the sample
-      players["p" + parseInt((13 * c_index) / 100)].start();
-    }
+    // if (players["p" + parseInt((13 * c_index) / 100)].state === "started") {
+    //   // console.log("Yes");
+    //   // players["p" + parseInt((13 * c_index) / 100)].stop();
+    //   players["p" + parseInt((13 * c_index) / 100)].restart();
+    // } else {
+    //   // Play the sample
+    //   players["p" + parseInt((13 * c_index) / 100)].start();
+    // }
   }
 
   // This function will help you detect when an animation is

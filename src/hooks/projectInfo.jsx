@@ -215,7 +215,8 @@ function ProjectInfo(props) {
               </p>
               <h2> Tech</h2>
               <p>
-                The website was built in React and the visualizations in D3.js.
+                The website was built in React, the visualizations in D3.js, and
+                the audio with Tone.js.
               </p>
               <p>
                 In order to calculate the percentage of cloud on each image, a
