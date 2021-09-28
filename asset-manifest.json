@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/stockholmsky/static/css/main.c55a2f59.chunk.css",
-    "main.js": "/stockholmsky/static/js/main.349c3980.chunk.js",
+    "main.js": "/stockholmsky/static/js/main.d9e7e665.chunk.js",
     "runtime-main.js": "/stockholmsky/static/js/runtime-main.704565be.js",
     "static/js/2.0c4a79d7.chunk.js": "/stockholmsky/static/js/2.0c4a79d7.chunk.js",
     "static/js/3.de087358.chunk.js": "/stockholmsky/static/js/3.de087358.chunk.js",
@@ -34,6 +34,6 @@
     "static/js/runtime-main.704565be.js",
     "static/js/2.0c4a79d7.chunk.js",
     "static/css/main.c55a2f59.chunk.css",
-    "static/js/main.349c3980.chunk.js"
+    "static/js/main.d9e7e665.chunk.js"
   ]
 }
