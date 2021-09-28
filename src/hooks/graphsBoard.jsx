@@ -2539,9 +2539,10 @@ function GraphsBoard(props) {
   function playDaySample(photoElement) {
     const c_index = photoElement.getAttribute("c_index");
 
-    // console.log(
-    //   "state: " + players["p" + parseInt((13 * c_index) / 100)].state
-    // );
+    console.log(
+      "state: " + players["p" + parseInt((13 * c_index) / 100)].state
+    );
+
     players["p" + parseInt((13 * c_index) / 100)].start();
 
     // if (players["p" + parseInt((13 * c_index) / 100)].state === "started") {
