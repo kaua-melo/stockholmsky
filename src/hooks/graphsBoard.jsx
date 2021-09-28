@@ -2542,6 +2542,9 @@ function GraphsBoard(props) {
     console.log(
       "state: " + players["p" + parseInt((13 * c_index) / 100)].state
     );
+    console.log(
+      "loaded: " + players["p" + parseInt((13 * c_index) / 100)].loaded
+    );
 
     players["p" + parseInt((13 * c_index) / 100)].start();
 
