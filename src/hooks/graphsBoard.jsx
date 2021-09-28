@@ -2548,6 +2548,7 @@ function GraphsBoard(props) {
 
     // If the buffer is already loaded, then we can play it. Otherwise we get an error.
     if (players["p" + parseInt((13 * c_index) / 100)].loaded) {
+      console.log("  - Play!");
       players["p" + parseInt((13 * c_index) / 100)].start();
     }
 
